@@ -86,16 +86,87 @@ function evaluateFormula(formula: string, data: SheetData, visited: Set<string> 
   }
 
   try {
-    // Simple eval for basic math - in production use a proper parser
-    // Only allow numbers and basic operators
-    if (/^[\d\s+\-*/().]+$/.test(evalExpression)) {
-      const result = Function(`"use strict"; return (${evalExpression})`)();
-      return typeof result === 'number' && !isNaN(result) ? result : '#ERROR!';
-    }
-    return '#ERROR!';
+    // Safe math expression parser - only allows numbers and basic operators
+    const result = safeEvaluateMath(evalExpression);
+    return result !== null ? result : '#ERROR!';
   } catch {
     return '#ERROR!';
   }
+}
+
+// Safe math expression parser that doesn't use eval or Function constructor
+function safeEvaluateMath(expr: string): number | null {
+  // Remove all whitespace
+  expr = expr.replace(/\s+/g, '');
+  
+  // Validate that expression only contains safe characters
+  if (!/^[\d+\-*/().]+$/.test(expr)) {
+    return null;
+  }
+  
+  try {
+    return parseExpression(expr);
+  } catch {
+    return null;
+  }
+}
+
+function parseExpression(expr: string): number {
+  let pos = 0;
+  
+  function parseNumber(): number {
+    let numStr = '';
+    while (pos < expr.length && (expr[pos] >= '0' && expr[pos] <= '9' || expr[pos] === '.')) {
+      numStr += expr[pos++];
+    }
+    if (numStr === '') throw new Error('Expected number');
+    return parseFloat(numStr);
+  }
+  
+  function parseFactor(): number {
+    if (expr[pos] === '(') {
+      pos++; // skip '('
+      const result = parseAddSub();
+      if (expr[pos] !== ')') throw new Error('Expected )');
+      pos++; // skip ')'
+      return result;
+    }
+    if (expr[pos] === '-') {
+      pos++;
+      return -parseFactor();
+    }
+    if (expr[pos] === '+') {
+      pos++;
+      return parseFactor();
+    }
+    return parseNumber();
+  }
+  
+  function parseMulDiv(): number {
+    let left = parseFactor();
+    while (pos < expr.length && (expr[pos] === '*' || expr[pos] === '/')) {
+      const op = expr[pos++];
+      const right = parseFactor();
+      if (op === '*') left *= right;
+      else left /= right;
+    }
+    return left;
+  }
+  
+  function parseAddSub(): number {
+    let left = parseMulDiv();
+    while (pos < expr.length && (expr[pos] === '+' || expr[pos] === '-')) {
+      const op = expr[pos++];
+      const right = parseMulDiv();
+      if (op === '+') left += right;
+      else left -= right;
+    }
+    return left;
+  }
+  
+  const result = parseAddSub();
+  if (pos !== expr.length) throw new Error('Unexpected character');
+  return result;
 }
 
 function getCellValue(cellId: string, data: SheetData, visited: Set<string> = new Set()): string | number {
