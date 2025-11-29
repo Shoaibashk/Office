@@ -1,0 +1,37 @@
+{
+  "name": "mini-office-suite",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mini Office Web Suite - A monorepo containing Mini Word, Mini Excel, Mini PowerPoint, and Mini OneDrive",
+  "scripts": {
+    "dev": "pnpm --parallel -r run dev",
+    "dev:word": "pnpm --filter @office/mini-word run dev",
+    "dev:excel": "pnpm --filter @office/mini-excel run dev",
+    "dev:powerpoint": "pnpm --filter @office/mini-powerpoint run dev",
+    "dev:onedrive": "pnpm --filter @office/mini-onedrive run dev",
+    "build": "pnpm -r run build",
+    "build:word": "pnpm --filter @office/mini-word run build",
+    "build:excel": "pnpm --filter @office/mini-excel run build",
+    "build:powerpoint": "pnpm --filter @office/mini-powerpoint run build",
+    "build:onedrive": "pnpm --filter @office/mini-onedrive run build",
+    "lint": "pnpm -r run lint",
+    "preview": "pnpm --parallel -r run preview"
+  },
+  "keywords": [
+    "office",
+    "word",
+    "excel",
+    "powerpoint",
+    "onedrive",
+    "monorepo",
+    "pnpm",
+    "react"
+  ],
+  "author": "",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@10.24.0"
+}
