@@ -1,0 +1,38 @@
+{
+  "name": "mini-office-suite",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mini Office Web Suite - A monorepo containing Word, Sheet, Slides, and Drive",
+  "scripts": {
+    "dev": "pnpm --parallel -r run dev",
+    "dev:word": "pnpm --filter @office/word run dev",
+    "dev:sheet": "pnpm --filter @office/sheet run dev",
+    "dev:slides": "pnpm --filter @office/slides run dev",
+    "dev:drive": "pnpm --filter @office/drive run dev",
+    "build": "pnpm -r run build",
+    "build:word": "pnpm --filter @office/word run build",
+    "build:sheet": "pnpm --filter @office/sheet run build",
+    "build:slides": "pnpm --filter @office/slides run build",
+    "build:drive": "pnpm --filter @office/drive run build",
+    "lint": "pnpm -r run lint",
+    "preview": "pnpm --parallel -r run preview"
+  },
+  "keywords": [
+    "office",
+    "word",
+    "sheet",
+    "slides",
+    "drive",
+    "monorepo",
+    "pnpm",
+    "react",
+    "daisyui"
+  ],
+  "author": "",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@10.24.0"
+}
