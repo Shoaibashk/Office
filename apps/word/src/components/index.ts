@@ -1,0 +1,1 @@
+export { WordApp } from './WordApp';

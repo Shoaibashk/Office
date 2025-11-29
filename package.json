@@ -1,8 +1,8 @@
 {
-  "name": "mini-office-suite",
-  "version": "1.0.0",
+  "name": "office-365-clone",
+  "version": "2.0.0",
   "private": true,
-  "description": "Mini Office Web Suite - A monorepo containing Word, Sheet, Slides, and Drive",
+  "description": "Enterprise Office 365 Clone - Full-featured Word, Sheet, Slides, and Drive applications",
   "scripts": {
     "dev": "pnpm --parallel -r run dev",
     "dev:word": "pnpm --filter @office/word run dev",
@@ -15,20 +15,25 @@
     "build:slides": "pnpm --filter @office/slides run build",
     "build:drive": "pnpm --filter @office/drive run build",
     "lint": "pnpm -r run lint",
-    "preview": "pnpm --parallel -r run preview"
+    "preview": "pnpm --parallel -r run preview",
+    "clean": "pnpm -r exec rm -rf node_modules dist",
+    "typecheck": "pnpm -r run typecheck"
   },
   "keywords": [
     "office",
+    "office365",
     "word",
-    "sheet",
-    "slides",
-    "drive",
+    "excel",
+    "powerpoint",
+    "onedrive",
+    "enterprise",
+    "productivity",
     "monorepo",
     "pnpm",
     "react",
-    "daisyui"
+    "typescript"
   ],
-  "author": "",
+  "author": "Office Clone Team",
   "license": "Apache-2.0",
   "engines": {
     "node": ">=18.0.0",

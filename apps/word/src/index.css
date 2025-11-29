@@ -1,30 +1,229 @@
 @import "tailwindcss";
-@plugin "daisyui" {
-  themes: light --default, dark, corporate;
-}
+@plugin "@tailwindcss/typography";
 
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
-.document-editor {
-  min-height: 11in;
-  width: 8.5in;
-  padding: 1in;
-  background: white;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  margin: 20px auto;
+/* TipTap editor styles */
+.ProseMirror {
   outline: none;
+  min-height: 100%;
+}
+
+.ProseMirror p {
+  margin: 0 0 1em 0;
+}
+
+.ProseMirror h1 {
+  font-size: 2em;
+  margin: 0 0 0.5em 0;
+}
+
+.ProseMirror h2 {
+  font-size: 1.5em;
+  margin: 0 0 0.5em 0;
+}
+
+.ProseMirror h3 {
+  font-size: 1.17em;
+  margin: 0 0 0.5em 0;
+}
+
+.ProseMirror ul,
+.ProseMirror ol {
+  padding-left: 1.5em;
+  margin: 0 0 1em 0;
+}
+
+.ProseMirror blockquote {
+  border-left: 3px solid #ddd;
+  padding-left: 1em;
+  margin-left: 0;
+  color: #666;
+}
+
+.ProseMirror code {
+  background: #f4f4f4;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-family: 'Consolas', 'Monaco', monospace;
+}
+
+.ProseMirror pre {
+  background: #1e1e1e;
+  color: #d4d4d4;
+  padding: 1em;
   border-radius: 4px;
+  overflow-x: auto;
 }
 
-.document-editor:focus {
-  outline: none;
+.ProseMirror pre code {
+  background: none;
+  padding: 0;
+}
+
+/* Placeholder */
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: 'Start typing...';
+  color: #adb5bd;
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Focus styles */
+:focus-visible {
+  outline: 2px solid var(--accent-8);
+  outline-offset: 1px;
+}
+
+/* Selection */
+::selection {
+  background-color: var(--accent-5);
+}
+
+/* Utility classes for Word app */
+.text-white { color: white; }
+.text-blue-200 { color: #bfdbfe; }
+.text-blue-600 { color: #2563eb; }
+.text-gray-500 { color: #6b7280; }
+.text-gray-600 { color: #4b5563; }
+.text-gray-900 { color: #111827; }
+
+.bg-white { background-color: white; }
+.bg-gray-100 { background-color: #f3f4f6; }
+.bg-blue-50 { background-color: #eff6ff; }
+.bg-blue-600 { background-color: #2563eb; }
+.bg-blue-700 { background-color: #1d4ed8; }
+.bg-transparent { background-color: transparent; }
+
+.hover\:bg-blue-50:hover { background-color: #eff6ff; }
+.hover\:bg-blue-700:hover { background-color: #1d4ed8; }
+
+.border-none { border: none; }
+.border-b { border-bottom-width: 1px; }
+.border-b-2 { border-bottom-width: 2px; }
+.border-t { border-top-width: 1px; }
+.border-r { border-right-width: 1px; }
+.border-gray-100 { border-color: #f3f4f6; }
+.border-gray-200 { border-color: #e5e7eb; }
+.border-gray-300 { border-color: #d1d5db; }
+.border-gray-400 { border-color: #9ca3af; }
+.border-blue-600 { border-color: #2563eb; }
+.border-white\/50 { border-color: rgba(255, 255, 255, 0.5); }
+
+.rounded { border-radius: 0.25rem; }
+.rounded-lg { border-radius: 0.5rem; }
+
+.shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+
+.w-4 { width: 1rem; }
+.w-6 { width: 1.5rem; }
+.w-12 { width: 3rem; }
+.w-16 { width: 4rem; }
+.w-32 { width: 8rem; }
+.w-px { width: 1px; }
+.w-full { width: 100%; }
+.h-2 { height: 0.5rem; }
+.h-4 { height: 1rem; }
+.h-6 { height: 1.5rem; }
+.h-12 { height: 3rem; }
+.h-full { height: 100%; }
+.h-screen { height: 100vh; }
+.w-screen { width: 100vw; }
+.min-h-full { min-height: 100%; }
+
+.flex { display: flex; }
+.flex-1 { flex: 1 1 0%; }
+.flex-col { flex-direction: column; }
+.flex-wrap { flex-wrap: wrap; }
+.shrink-0 { flex-shrink: 0; }
+.overflow-hidden { overflow: hidden; }
+
+.grid { display: grid; }
+.grid-cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+
+.p-2 { padding: 0.5rem; }
+.p-4 { padding: 1rem; }
+.px-2 { padding-left: 0.5rem; padding-right: 0.5rem; }
+.px-4 { padding-left: 1rem; padding-right: 1rem; }
+.py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+.py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+.py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+.pb-2 { padding-bottom: 0.5rem; }
+.pr-4 { padding-right: 1rem; }
+
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mr-6 { margin-right: 1.5rem; }
+.mx-4 { margin-left: 1rem; margin-right: 1rem; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.mt-1 { margin-top: 0.25rem; }
+
+.gap-1 { gap: 0.25rem; }
+.gap-2 { gap: 0.5rem; }
+.gap-3 { gap: 0.75rem; }
+.gap-4 { gap: 1rem; }
+
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.justify-end { justify-content: flex-end; }
+
+.text-xs { font-size: 0.75rem; line-height: 1rem; }
+.text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+.text-center { text-align: center; }
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.focus\:outline-none:focus { outline: 2px solid transparent; outline-offset: 2px; }
+.focus\:ring-1:focus { --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color); --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color); box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000); }
+.focus\:ring-white\/50:focus { --tw-ring-color: rgba(255, 255, 255, 0.5); }
+
+.prose { color: #374151; max-width: 65ch; }
+.prose-sm { font-size: 0.875rem; line-height: 1.7142857; }
+.max-w-none { max-width: none; }
+
+.relative { position: relative; }
+.absolute { position: absolute; }
+.bottom-0 { bottom: 0; }
+
+/* Page focus state for Word app */
+.page {
+  border: 1px solid transparent;
+  box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.08);
+}
+
+/* Keep focus subtle: no blue outline box, just shadow */
+.page:focus-within {
+  border-color: transparent;
+  box-shadow: 0 12px 20px -5px rgba(15, 23, 42, 0.18);
 }
