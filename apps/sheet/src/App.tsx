@@ -31,7 +31,6 @@ function evaluateFormula(formula: string, data: SheetData, visited: Set<string> 
   
   const expression = formula.substring(1).toUpperCase();
   
-  // Handle SUM function
   const sumMatch = expression.match(/^SUM\(([A-Z]\d+):([A-Z]\d+)\)$/);
   if (sumMatch) {
     const start = parseCellRef(sumMatch[1]);
@@ -50,7 +49,6 @@ function evaluateFormula(formula: string, data: SheetData, visited: Set<string> 
     return sum;
   }
 
-  // Handle AVERAGE function
   const avgMatch = expression.match(/^AVERAGE\(([A-Z]\d+):([A-Z]\d+)\)$/);
   if (avgMatch) {
     const start = parseCellRef(avgMatch[1]);
@@ -73,7 +71,6 @@ function evaluateFormula(formula: string, data: SheetData, visited: Set<string> 
     return count > 0 ? sum / count : 0;
   }
 
-  // Handle simple arithmetic with cell references
   let evalExpression = expression;
   const cellRefs = expression.match(/[A-Z]\d+/g) || [];
   
@@ -85,7 +82,6 @@ function evaluateFormula(formula: string, data: SheetData, visited: Set<string> 
   }
 
   try {
-    // Safe math expression parser - only allows numbers and basic operators
     const result = safeEvaluateMath(evalExpression);
     return result !== null ? result : '#ERROR!';
   } catch {
@@ -93,16 +89,9 @@ function evaluateFormula(formula: string, data: SheetData, visited: Set<string> 
   }
 }
 
-// Safe math expression parser that doesn't use eval or Function constructor
 function safeEvaluateMath(expr: string): number | null {
-  // Remove all whitespace
   expr = expr.replace(/\s+/g, '');
-  
-  // Validate that expression only contains safe characters
-  if (!/^[\d+\-*/().]+$/.test(expr)) {
-    return null;
-  }
-  
+  if (!/^[\d+\-*/().]+$/.test(expr)) return null;
   try {
     return parseExpression(expr);
   } catch {
@@ -124,20 +113,14 @@ function parseExpression(expr: string): number {
   
   function parseFactor(): number {
     if (expr[pos] === '(') {
-      pos++; // skip '('
+      pos++;
       const result = parseAddSub();
       if (expr[pos] !== ')') throw new Error('Expected )');
-      pos++; // skip ')'
+      pos++;
       return result;
     }
-    if (expr[pos] === '-') {
-      pos++;
-      return -parseFactor();
-    }
-    if (expr[pos] === '+') {
-      pos++;
-      return parseFactor();
-    }
+    if (expr[pos] === '-') { pos++; return -parseFactor(); }
+    if (expr[pos] === '+') { pos++; return parseFactor(); }
     return parseNumber();
   }
   
@@ -171,13 +154,11 @@ function parseExpression(expr: string): number {
 function getCellValue(cellId: string, data: SheetData, visited: Set<string> = new Set()): string | number {
   const cell = data[cellId];
   if (!cell) return '';
-  
   if (cell.formula) {
     const newVisited = new Set(visited);
     newVisited.add(cellId);
     return evaluateFormula(cell.formula, data, newVisited);
   }
-  
   return cell.value;
 }
 
@@ -232,7 +213,6 @@ function App() {
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       handleCellBlur();
-      // Move to next row
       if (selectedCell) {
         const ref = parseCellRef(selectedCell);
         if (ref && ref.row < ROWS - 1) {
@@ -245,7 +225,6 @@ function App() {
     } else if (e.key === 'Tab') {
       e.preventDefault();
       handleCellBlur();
-      // Move to next column
       if (selectedCell) {
         const ref = parseCellRef(selectedCell);
         if (ref && ref.col < COLS - 1) {
@@ -270,59 +249,99 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col" data-theme="corporate">
+    <div className="min-h-screen flex flex-col bg-base-200">
       {/* Header */}
-      <div className="navbar bg-success text-success-content">
-        <div className="flex-1 gap-2">
-          <span className="text-xl font-bold">📊 Sheet</span>
+      <header className="navbar bg-gradient-to-r from-success to-success/90 text-success-content shadow-lg">
+        <div className="flex-1 gap-3">
+          <div className="flex items-center gap-2">
+            <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center">
+              <span className="text-xl">📊</span>
+            </div>
+            <span className="text-xl font-semibold tracking-tight">Sheet</span>
+          </div>
           <input
             type="text"
             value={sheetName}
             onChange={(e) => setSheetName(e.target.value)}
-            className="input input-sm bg-success/80 text-success-content"
+            className="input input-sm bg-white/10 border-white/20 text-success-content placeholder:text-white/60 focus:bg-white/20 focus:border-white/40 w-48 font-medium"
             placeholder="Sheet name"
+          />
+        </div>
+        <div className="flex-none gap-2">
+          <button className="btn btn-sm btn-ghost text-success-content hover:bg-white/10">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            Export
+          </button>
+        </div>
+      </header>
+
+      {/* Formula Bar */}
+      <div className="bg-base-100 px-4 py-2 flex items-center gap-3 border-b border-base-300 shadow-sm">
+        <div className="badge badge-lg badge-neutral font-mono font-semibold min-w-[60px] justify-center">
+          {selectedCell || ''}
+        </div>
+        <div className="text-base-content/40">|</div>
+        <div className="flex-1 flex items-center gap-2">
+          <span className="text-success font-bold text-lg">fx</span>
+          <input
+            type="text"
+            value={editingCell ? editValue : getCurrentCellDisplay()}
+            onChange={(e) => {
+              if (editingCell) {
+                setEditValue(e.target.value);
+              } else {
+                handleStartEdit();
+                setEditValue(e.target.value);
+              }
+            }}
+            onKeyDown={handleKeyDown}
+            onBlur={handleCellBlur}
+            className="input input-sm input-bordered flex-1 font-mono"
+            placeholder="Enter value or formula (e.g., =SUM(A1:A3))"
           />
         </div>
       </div>
 
       {/* Toolbar */}
-      <div className="bg-base-200 p-2 flex flex-wrap gap-2 items-center border-b">
-        <div className="badge badge-neutral font-mono">{selectedCell || ''}</div>
-        <input
-          type="text"
-          value={editingCell ? editValue : getCurrentCellDisplay()}
-          onChange={(e) => {
-            if (editingCell) {
-              setEditValue(e.target.value);
-            } else {
-              handleStartEdit();
-              setEditValue(e.target.value);
-            }
-          }}
-          onKeyDown={handleKeyDown}
-          onBlur={handleCellBlur}
-          className="input input-sm input-bordered flex-1 min-w-[300px]"
-          placeholder="Enter value or formula (e.g., =SUM(A1:A3))"
-        />
-        
-        <div className="divider divider-horizontal mx-1"></div>
-        
-        <button className="btn btn-sm btn-ghost" title="Bold"><strong>B</strong></button>
-        <button className="btn btn-sm btn-ghost" title="Italic"><em>I</em></button>
-        
-        <div className="divider divider-horizontal mx-1"></div>
-        
-        <button className="btn btn-sm btn-ghost" title="Align Left">⬅️</button>
-        <button className="btn btn-sm btn-ghost" title="Align Center">↔️</button>
-        <button className="btn btn-sm btn-ghost" title="Align Right">➡️</button>
+      <div className="bg-base-100 px-4 py-1.5 flex items-center gap-1 border-b border-base-300">
+        <div className="join">
+          <button className="btn btn-xs btn-ghost join-item font-bold" title="Bold">B</button>
+          <button className="btn btn-xs btn-ghost join-item italic" title="Italic">I</button>
+          <button className="btn btn-xs btn-ghost join-item underline" title="Underline">U</button>
+        </div>
+        <div className="divider divider-horizontal mx-1 h-4"></div>
+        <div className="join">
+          <button className="btn btn-xs btn-ghost join-item" title="Align Left">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h10M4 18h14" />
+            </svg>
+          </button>
+          <button className="btn btn-xs btn-ghost join-item" title="Align Center">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M7 12h10M5 18h14" />
+            </svg>
+          </button>
+          <button className="btn btn-xs btn-ghost join-item" title="Align Right">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M10 12h10M6 18h14" />
+            </svg>
+          </button>
+        </div>
+        <div className="divider divider-horizontal mx-1 h-4"></div>
+        <select className="select select-xs select-bordered font-medium">
+          <option>$</option>
+          <option>%</option>
+          <option>#</option>
+        </select>
       </div>
 
       {/* Spreadsheet */}
-      <div className="flex-1 overflow-auto bg-base-100">
+      <div className="flex-1 overflow-auto">
         <div className="spreadsheet inline-block" style={{ 
           gridTemplateColumns: `50px repeat(${COLS}, 100px)` 
         }}>
-          {/* Header row */}
           <div className="cell cell-header row-header"></div>
           {Array.from({ length: COLS }, (_, col) => (
             <div key={`header-${col}`} className="cell cell-header">
@@ -330,7 +349,6 @@ function App() {
             </div>
           ))}
           
-          {/* Data rows */}
           {Array.from({ length: 50 }, (_, row) => (
             <React.Fragment key={`row-${row}`}>
               <div className="cell cell-header row-header">

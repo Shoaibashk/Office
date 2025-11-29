@@ -1,15 +1,23 @@
-# 🏢 Mini Office Web Suite
+# 🏢 Office Web Suite
 
-A modern, React-based office suite built as a pnpm monorepo with DaisyUI components. This project includes four core web applications that provide essential office productivity tools.
+A modern, enterprise-level office productivity suite built as a pnpm monorepo with React and DaisyUI v5. Features a crisp, professional interface designed for optimal user experience.
 
 ## 📦 Applications
 
 | App | Description | Port |
 |-----|-------------|------|
-| **📝 Word** | Rich text editor with formatting tools | 3001 |
-| **📊 Sheet** | Spreadsheet with formula support (SUM, AVERAGE) | 3002 |
-| **📽️ Slides** | Slide builder with drag-and-drop elements | 3003 |
-| **☁️ Drive** | File storage system with upload/download | 3004 |
+| **📝 Word** | Rich text editor with formatting tools, font selection, and alignment | 3001 |
+| **📊 Sheet** | Spreadsheet with formula support (SUM, AVERAGE, arithmetic) | 3002 |
+| **📽️ Slides** | Presentation builder with drag-and-drop elements | 3003 |
+| **☁️ Drive** | File storage system with upload, folders, and grid/list views | 3004 |
+
+## ✨ Features
+
+- **Modern Enterprise UI** - Clean, professional design with consistent styling
+- **DaisyUI v5** - Latest component library with Tailwind CSS v4
+- **Responsive Design** - Works across desktop and tablet devices
+- **Gradient Headers** - Each app has a distinct color identity
+- **SVG Icons** - Crisp, scalable icons throughout the interface
 
 ## 🚀 Getting Started
 
@@ -62,24 +70,32 @@ pnpm build:drive
 └── pnpm-workspace.yaml    # pnpm workspace config
 ```
 
-## 🎨 Shared UI Package
+## 🎨 Design System
 
-The `@office/ui` package contains reusable components used across all applications:
+Each application features:
+- **Gradient header bars** with app-specific colors
+- **Consistent toolbar styling** with grouped buttons
+- **Modern card layouts** with subtle shadows
+- **Responsive navigation** sidebars
 
-- **Button** - Styled buttons with variants (primary, secondary, ghost)
-- **Card** - Container component with optional title
-- **Toolbar** - Horizontal toolbar with buttons and dividers
-- **Sidebar** - Vertical sidebar with navigation items
-- **Layout** - Page layout with header and sidebar support
+Color scheme per app:
+- **Word** - Primary blue gradient
+- **Sheet** - Success green gradient  
+- **Slides** - Warning orange gradient
+- **Drive** - Info cyan gradient
 
 ## 🔧 Tech Stack
 
 - **React 18** - UI library
 - **TypeScript** - Type safety
-- **Vite** - Build tool and dev server
-- **Tailwind CSS** - Utility-first CSS framework
-- **DaisyUI** - Tailwind CSS component library
+- **Vite** - Build tool with Tailwind CSS v4 plugin
+- **Tailwind CSS v4** - Utility-first CSS framework
+- **DaisyUI v5** - Modern component library
 - **pnpm** - Fast, disk space efficient package manager
+
+## 🔒 Security
+
+- Formula evaluation in Sheet uses a custom recursive descent parser instead of `eval()` to prevent code injection
 
 ## 📄 License
 
