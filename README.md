@@ -1,15 +1,15 @@
 # 🏢 Mini Office Web Suite
 
-A modern, React-based office suite built as a pnpm monorepo. This project includes four core web applications that provide essential office productivity tools.
+A modern, React-based office suite built as a pnpm monorepo with DaisyUI components. This project includes four core web applications that provide essential office productivity tools.
 
 ## 📦 Applications
 
 | App | Description | Port |
 |-----|-------------|------|
-| **📝 Mini Word** | Rich text editor with formatting tools | 3001 |
-| **📊 Mini Excel** | Spreadsheet with formula support (SUM, AVERAGE) | 3002 |
-| **📽️ Mini PowerPoint** | Slide builder with drag-and-drop elements | 3003 |
-| **☁️ Mini OneDrive** | File storage system with upload/download | 3004 |
+| **📝 Word** | Rich text editor with formatting tools | 3001 |
+| **📊 Sheet** | Spreadsheet with formula support (SUM, AVERAGE) | 3002 |
+| **📽️ Slides** | Slide builder with drag-and-drop elements | 3003 |
+| **☁️ Drive** | File storage system with upload/download | 3004 |
 
 ## 🚀 Getting Started
 
@@ -28,10 +28,10 @@ pnpm install
 pnpm dev
 
 # Or start individual apps
-pnpm dev:word       # Start Mini Word on port 3001
-pnpm dev:excel      # Start Mini Excel on port 3002
-pnpm dev:powerpoint # Start Mini PowerPoint on port 3003
-pnpm dev:onedrive   # Start Mini OneDrive on port 3004
+pnpm dev:word    # Start Word on port 3001
+pnpm dev:sheet   # Start Sheet on port 3002
+pnpm dev:slides  # Start Slides on port 3003
+pnpm dev:drive   # Start Drive on port 3004
 ```
 
 ### Building for Production
@@ -42,9 +42,9 @@ pnpm build
 
 # Build individual apps
 pnpm build:word
-pnpm build:excel
-pnpm build:powerpoint
-pnpm build:onedrive
+pnpm build:sheet
+pnpm build:slides
+pnpm build:drive
 ```
 
 ## 📁 Project Structure
@@ -52,10 +52,10 @@ pnpm build:onedrive
 ```
 .
 ├── apps/
-│   ├── mini-word/         # Rich text editor
-│   ├── mini-excel/        # Spreadsheet application
-│   ├── mini-powerpoint/   # Presentation builder
-│   └── mini-onedrive/     # File storage system
+│   ├── word/              # Rich text editor
+│   ├── sheet/             # Spreadsheet application
+│   ├── slides/            # Presentation builder
+│   └── drive/             # File storage system
 ├── packages/
 │   └── ui/                # Shared UI components
 ├── package.json           # Root package.json
@@ -78,6 +78,7 @@ The `@office/ui` package contains reusable components used across all applicatio
 - **TypeScript** - Type safety
 - **Vite** - Build tool and dev server
 - **Tailwind CSS** - Utility-first CSS framework
+- **DaisyUI** - Tailwind CSS component library
 - **pnpm** - Fast, disk space efficient package manager
 
 ## 📄 License

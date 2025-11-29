@@ -1,5 +1,4 @@
 import { useState, useCallback } from 'react';
-import { Layout, Toolbar, ToolbarButton, ToolbarDivider, Sidebar, SidebarItem } from '@office/ui';
 
 type SlideElement = {
   id: string;
@@ -41,7 +40,7 @@ function App() {
           y: 50,
           width: 700,
           height: 80,
-          content: 'Welcome to Mini PowerPoint',
+          content: 'Welcome to Slides',
           style: { fontSize: 48, fontWeight: 'bold', color: '#1a1a2e' },
         },
         {
@@ -227,121 +226,117 @@ function App() {
     setSelectedElementId(null);
   }, [slides, currentSlideIndex, selectedElementId]);
 
-  const header = (
-    <div className="flex flex-col">
-      <div className="flex items-center gap-4 px-4 py-2 bg-orange-500">
-        <span className="text-xl font-bold text-white">📽️ Mini PowerPoint</span>
-        <input
-          type="text"
-          value={presentationName}
-          onChange={(e) => setPresentationName(e.target.value)}
-          className="bg-orange-400 text-white px-2 py-1 rounded border-none outline-none placeholder-orange-200"
-          placeholder="Presentation name"
-        />
-      </div>
-      <Toolbar>
-        <ToolbarButton onClick={addSlide} tooltip="New Slide">
-          ➕ Slide
-        </ToolbarButton>
-        <ToolbarButton onClick={deleteSlide} tooltip="Delete Slide">
-          🗑️
-        </ToolbarButton>
-        <ToolbarDivider />
-        <ToolbarButton onClick={addTextBox} tooltip="Add Text Box">
-          📝 Text
-        </ToolbarButton>
-        <ToolbarButton onClick={addShape} tooltip="Add Shape">
-          ⬛ Shape
-        </ToolbarButton>
-        <ToolbarDivider />
-        {selectedElementId && (
-          <ToolbarButton onClick={deleteSelectedElement} tooltip="Delete Element">
-            ❌ Delete
-          </ToolbarButton>
-        )}
-      </Toolbar>
-    </div>
-  );
-
-  const sidebar = (
-    <Sidebar width="200px" className="bg-gray-100">
-      <div className="p-2 space-y-2">
-        <h3 className="text-sm font-semibold text-gray-600 px-2">Slides</h3>
-        {slides.map((slide, index) => (
-          <SidebarItem
-            key={slide.id}
-            active={index === currentSlideIndex}
-            onClick={() => setCurrentSlideIndex(index)}
-          >
-            <div
-              className={`slide-thumbnail w-full rounded border ${
-                index === currentSlideIndex ? 'border-blue-500' : 'border-gray-300'
-              }`}
-              style={{ backgroundColor: slide.backgroundColor }}
-            >
-              <div className="p-2 text-xs text-gray-600 truncate">
-                Slide {index + 1}
-              </div>
-            </div>
-          </SidebarItem>
-        ))}
-      </div>
-    </Sidebar>
-  );
-
   return (
-    <Layout header={header} sidebar={sidebar}>
-      <div className="flex items-center justify-center h-full p-8">
-        <div
-          className="slide-canvas w-full max-w-4xl relative"
-          style={{ backgroundColor: currentSlide.backgroundColor }}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
-          onClick={handleSlideClick}
-        >
-          {currentSlide.elements.map((element) => (
-            <div
-              key={element.id}
-              className={`slide-element absolute ${
-                selectedElementId === element.id ? 'selected' : ''
-              }`}
-              style={{
-                left: element.x,
-                top: element.y,
-                width: element.width,
-                height: element.height,
-              }}
-              onMouseDown={(e) => handleElementMouseDown(e, element)}
-            >
-              {element.type === 'text' ? (
-                <div
-                  contentEditable
-                  suppressContentEditableWarning
-                  className="w-full h-full outline-none"
-                  style={{
-                    fontSize: element.style?.fontSize || 16,
-                    fontWeight: element.style?.fontWeight || 'normal',
-                    color: element.style?.color || '#000000',
-                  }}
-                  onBlur={(e) => updateElementContent(element.id, e.currentTarget.textContent || '')}
-                >
-                  {element.content}
-                </div>
-              ) : element.type === 'shape' ? (
-                <div
-                  className="w-full h-full"
-                  style={{
-                    backgroundColor: element.style?.backgroundColor || '#cccccc',
-                    borderRadius: element.style?.borderRadius || 0,
-                  }}
-                />
-              ) : null}
-            </div>
-          ))}
+    <div className="min-h-screen flex flex-col" data-theme="corporate">
+      {/* Header */}
+      <div className="navbar bg-warning text-warning-content">
+        <div className="flex-1 gap-2">
+          <span className="text-xl font-bold">📽️ Slides</span>
+          <input
+            type="text"
+            value={presentationName}
+            onChange={(e) => setPresentationName(e.target.value)}
+            className="input input-sm input-bordered bg-warning text-warning-content border-warning"
+            placeholder="Presentation name"
+          />
         </div>
       </div>
-    </Layout>
+
+      {/* Toolbar */}
+      <div className="bg-base-200 p-2 flex flex-wrap gap-1 items-center border-b">
+        <button className="btn btn-sm btn-ghost" onClick={addSlide} title="New Slide">➕ Slide</button>
+        <button className="btn btn-sm btn-ghost" onClick={deleteSlide} title="Delete Slide">🗑️</button>
+        
+        <div className="divider divider-horizontal mx-1"></div>
+        
+        <button className="btn btn-sm btn-ghost" onClick={addTextBox} title="Add Text Box">📝 Text</button>
+        <button className="btn btn-sm btn-ghost" onClick={addShape} title="Add Shape">⬛ Shape</button>
+        
+        {selectedElementId && (
+          <>
+            <div className="divider divider-horizontal mx-1"></div>
+            <button className="btn btn-sm btn-error" onClick={deleteSelectedElement} title="Delete Element">❌ Delete</button>
+          </>
+        )}
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Sidebar */}
+        <aside className="w-52 bg-base-200 border-r overflow-y-auto p-2">
+          <h3 className="text-sm font-semibold mb-2 px-2">Slides</h3>
+          <ul className="menu menu-compact">
+            {slides.map((slide, index) => (
+              <li key={slide.id}>
+                <button
+                  className={`${index === currentSlideIndex ? 'active' : ''}`}
+                  onClick={() => setCurrentSlideIndex(index)}
+                >
+                  <div
+                    className="w-full aspect-video rounded border bg-base-100"
+                    style={{ backgroundColor: slide.backgroundColor }}
+                  >
+                    <span className="text-xs">Slide {index + 1}</span>
+                  </div>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </aside>
+
+        {/* Canvas */}
+        <main className="flex-1 flex items-center justify-center p-8 bg-base-300">
+          <div
+            className="slide-canvas w-full max-w-4xl relative bg-base-100 shadow-xl"
+            style={{ backgroundColor: currentSlide.backgroundColor }}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+            onClick={handleSlideClick}
+          >
+            {currentSlide.elements.map((element) => (
+              <div
+                key={element.id}
+                className={`slide-element absolute ${
+                  selectedElementId === element.id ? 'ring-2 ring-primary' : ''
+                }`}
+                style={{
+                  left: element.x,
+                  top: element.y,
+                  width: element.width,
+                  height: element.height,
+                }}
+                onMouseDown={(e) => handleElementMouseDown(e, element)}
+              >
+                {element.type === 'text' ? (
+                  <div
+                    contentEditable
+                    suppressContentEditableWarning
+                    className="w-full h-full outline-none"
+                    style={{
+                      fontSize: element.style?.fontSize || 16,
+                      fontWeight: element.style?.fontWeight || 'normal',
+                      color: element.style?.color || '#000000',
+                    }}
+                    onBlur={(e) => updateElementContent(element.id, e.currentTarget.textContent || '')}
+                  >
+                    {element.content}
+                  </div>
+                ) : element.type === 'shape' ? (
+                  <div
+                    className="w-full h-full"
+                    style={{
+                      backgroundColor: element.style?.backgroundColor || '#cccccc',
+                      borderRadius: element.style?.borderRadius || 0,
+                    }}
+                  />
+                ) : null}
+              </div>
+            ))}
+          </div>
+        </main>
+      </div>
+    </div>
   );
 }
 

@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { Layout, Toolbar, ToolbarButton, ToolbarDivider } from '@office/ui';
 
 const ROWS = 100;
 const COLS = 26;
@@ -270,58 +269,56 @@ function App() {
     return cell?.formula || cell?.value || '';
   };
 
-  const header = (
-    <div className="flex flex-col">
-      <div className="flex items-center gap-4 px-4 py-2 bg-green-600">
-        <span className="text-xl font-bold text-white">📊 Mini Excel</span>
-        <input
-          type="text"
-          value={sheetName}
-          onChange={(e) => setSheetName(e.target.value)}
-          className="bg-green-500 text-white px-2 py-1 rounded border-none outline-none placeholder-green-200"
-          placeholder="Sheet name"
-        />
-      </div>
-      <Toolbar>
-        <div className="flex items-center gap-2 px-2">
-          <span className="font-mono bg-gray-100 px-2 py-1 rounded text-sm min-w-[50px]">
-            {selectedCell || ''}
-          </span>
+  return (
+    <div className="min-h-screen flex flex-col" data-theme="corporate">
+      {/* Header */}
+      <div className="navbar bg-success text-success-content">
+        <div className="flex-1 gap-2">
+          <span className="text-xl font-bold">📊 Sheet</span>
           <input
             type="text"
-            value={editingCell ? editValue : getCurrentCellDisplay()}
-            onChange={(e) => {
-              if (editingCell) {
-                setEditValue(e.target.value);
-              } else {
-                handleStartEdit();
-                setEditValue(e.target.value);
-              }
-            }}
-            onKeyDown={handleKeyDown}
-            onBlur={handleCellBlur}
-            className="flex-1 border rounded px-2 py-1 text-sm min-w-[300px]"
-            placeholder="Enter value or formula (e.g., =SUM(A1:A3))"
+            value={sheetName}
+            onChange={(e) => setSheetName(e.target.value)}
+            className="input input-sm input-bordered bg-success text-success-content border-success"
+            placeholder="Sheet name"
           />
         </div>
-        <ToolbarDivider />
-        <ToolbarButton tooltip="Bold">
-          <strong>B</strong>
-        </ToolbarButton>
-        <ToolbarButton tooltip="Italic">
-          <em>I</em>
-        </ToolbarButton>
-        <ToolbarDivider />
-        <ToolbarButton tooltip="Align Left">⬅️</ToolbarButton>
-        <ToolbarButton tooltip="Align Center">↔️</ToolbarButton>
-        <ToolbarButton tooltip="Align Right">➡️</ToolbarButton>
-      </Toolbar>
-    </div>
-  );
+      </div>
 
-  return (
-    <Layout header={header}>
-      <div className="overflow-auto h-full">
+      {/* Toolbar */}
+      <div className="bg-base-200 p-2 flex flex-wrap gap-2 items-center border-b">
+        <div className="badge badge-neutral font-mono">{selectedCell || ''}</div>
+        <input
+          type="text"
+          value={editingCell ? editValue : getCurrentCellDisplay()}
+          onChange={(e) => {
+            if (editingCell) {
+              setEditValue(e.target.value);
+            } else {
+              handleStartEdit();
+              setEditValue(e.target.value);
+            }
+          }}
+          onKeyDown={handleKeyDown}
+          onBlur={handleCellBlur}
+          className="input input-sm input-bordered flex-1 min-w-[300px]"
+          placeholder="Enter value or formula (e.g., =SUM(A1:A3))"
+        />
+        
+        <div className="divider divider-horizontal mx-1"></div>
+        
+        <button className="btn btn-sm btn-ghost" title="Bold"><strong>B</strong></button>
+        <button className="btn btn-sm btn-ghost" title="Italic"><em>I</em></button>
+        
+        <div className="divider divider-horizontal mx-1"></div>
+        
+        <button className="btn btn-sm btn-ghost" title="Align Left">⬅️</button>
+        <button className="btn btn-sm btn-ghost" title="Align Center">↔️</button>
+        <button className="btn btn-sm btn-ghost" title="Align Right">➡️</button>
+      </div>
+
+      {/* Spreadsheet */}
+      <div className="flex-1 overflow-auto bg-base-100">
         <div className="spreadsheet inline-block" style={{ 
           gridTemplateColumns: `50px repeat(${COLS}, 100px)` 
         }}>
@@ -381,7 +378,7 @@ function App() {
           ))}
         </div>
       </div>
-    </Layout>
+    </div>
   );
 }
 

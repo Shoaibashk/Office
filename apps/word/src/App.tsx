@@ -1,5 +1,4 @@
 import { useState, useRef, useCallback } from 'react';
-import { Layout, Toolbar, ToolbarButton, ToolbarDivider } from '@office/ui';
 
 type FormatCommand = 'bold' | 'italic' | 'underline' | 'strikeThrough' | 
   'justifyLeft' | 'justifyCenter' | 'justifyRight' | 'justifyFull' |
@@ -39,28 +38,31 @@ function App() {
     editorRef.current?.focus();
   };
 
-  const header = (
-    <div className="flex flex-col">
-      <div className="flex items-center gap-4 px-4 py-2 bg-blue-600">
-        <span className="text-xl font-bold text-white">📝 Mini Word</span>
-        <input
-          type="text"
-          value={documentTitle}
-          onChange={(e) => setDocumentTitle(e.target.value)}
-          className="bg-blue-500 text-white px-2 py-1 rounded border-none outline-none placeholder-blue-200"
-          placeholder="Document title"
-        />
+  return (
+    <div className="min-h-screen flex flex-col" data-theme="corporate">
+      {/* Header */}
+      <div className="navbar bg-primary text-primary-content">
+        <div className="flex-1 gap-2">
+          <span className="text-xl font-bold">📝 Word</span>
+          <input
+            type="text"
+            value={documentTitle}
+            onChange={(e) => setDocumentTitle(e.target.value)}
+            className="input input-sm input-bordered bg-primary-focus text-primary-content border-primary-focus"
+            placeholder="Document title"
+          />
+        </div>
       </div>
-      <Toolbar>
-        <ToolbarButton onClick={() => execCommand('undo')} tooltip="Undo">
-          ↩️
-        </ToolbarButton>
-        <ToolbarButton onClick={() => execCommand('redo')} tooltip="Redo">
-          ↪️
-        </ToolbarButton>
-        <ToolbarDivider />
+
+      {/* Toolbar */}
+      <div className="bg-base-200 p-2 flex flex-wrap gap-1 items-center border-b">
+        <button className="btn btn-sm btn-ghost" onClick={() => execCommand('undo')} title="Undo">↩️</button>
+        <button className="btn btn-sm btn-ghost" onClick={() => execCommand('redo')} title="Redo">↪️</button>
+        
+        <div className="divider divider-horizontal mx-1"></div>
+        
         <select 
-          className="px-2 py-1 border rounded text-sm"
+          className="select select-sm select-bordered"
           onChange={(e) => handleFontFamily(e.target.value)}
           defaultValue="Arial"
         >
@@ -70,8 +72,9 @@ function App() {
           <option value="Georgia">Georgia</option>
           <option value="Verdana">Verdana</option>
         </select>
+        
         <select 
-          className="px-2 py-1 border rounded text-sm"
+          className="select select-sm select-bordered"
           onChange={(e) => handleFontSize(e.target.value)}
           defaultValue="3"
         >
@@ -83,93 +86,90 @@ function App() {
           <option value="6">24</option>
           <option value="7">36</option>
         </select>
-        <ToolbarDivider />
-        <ToolbarButton 
+        
+        <div className="divider divider-horizontal mx-1"></div>
+        
+        <button 
+          className={`btn btn-sm ${activeFormats.has('bold') ? 'btn-primary' : 'btn-ghost'}`}
           onClick={() => execCommand('bold')} 
-          active={activeFormats.has('bold')}
-          tooltip="Bold (Ctrl+B)"
+          title="Bold (Ctrl+B)"
         >
           <strong>B</strong>
-        </ToolbarButton>
-        <ToolbarButton 
+        </button>
+        <button 
+          className={`btn btn-sm ${activeFormats.has('italic') ? 'btn-primary' : 'btn-ghost'}`}
           onClick={() => execCommand('italic')} 
-          active={activeFormats.has('italic')}
-          tooltip="Italic (Ctrl+I)"
+          title="Italic (Ctrl+I)"
         >
           <em>I</em>
-        </ToolbarButton>
-        <ToolbarButton 
+        </button>
+        <button 
+          className={`btn btn-sm ${activeFormats.has('underline') ? 'btn-primary' : 'btn-ghost'}`}
           onClick={() => execCommand('underline')} 
-          active={activeFormats.has('underline')}
-          tooltip="Underline (Ctrl+U)"
+          title="Underline (Ctrl+U)"
         >
           <u>U</u>
-        </ToolbarButton>
-        <ToolbarButton 
+        </button>
+        <button 
+          className={`btn btn-sm ${activeFormats.has('strikeThrough') ? 'btn-primary' : 'btn-ghost'}`}
           onClick={() => execCommand('strikeThrough')} 
-          active={activeFormats.has('strikeThrough')}
-          tooltip="Strikethrough"
+          title="Strikethrough"
         >
           <s>S</s>
-        </ToolbarButton>
-        <ToolbarDivider />
-        <ToolbarButton 
+        </button>
+        
+        <div className="divider divider-horizontal mx-1"></div>
+        
+        <button 
+          className={`btn btn-sm ${activeFormats.has('justifyLeft') ? 'btn-primary' : 'btn-ghost'}`}
           onClick={() => execCommand('justifyLeft')} 
-          active={activeFormats.has('justifyLeft')}
-          tooltip="Align Left"
+          title="Align Left"
         >
           ⬅️
-        </ToolbarButton>
-        <ToolbarButton 
+        </button>
+        <button 
+          className={`btn btn-sm ${activeFormats.has('justifyCenter') ? 'btn-primary' : 'btn-ghost'}`}
           onClick={() => execCommand('justifyCenter')} 
-          active={activeFormats.has('justifyCenter')}
-          tooltip="Align Center"
+          title="Align Center"
         >
           ↔️
-        </ToolbarButton>
-        <ToolbarButton 
+        </button>
+        <button 
+          className={`btn btn-sm ${activeFormats.has('justifyRight') ? 'btn-primary' : 'btn-ghost'}`}
           onClick={() => execCommand('justifyRight')} 
-          active={activeFormats.has('justifyRight')}
-          tooltip="Align Right"
+          title="Align Right"
         >
           ➡️
-        </ToolbarButton>
-        <ToolbarButton 
+        </button>
+        <button 
+          className={`btn btn-sm ${activeFormats.has('justifyFull') ? 'btn-primary' : 'btn-ghost'}`}
           onClick={() => execCommand('justifyFull')} 
-          active={activeFormats.has('justifyFull')}
-          tooltip="Justify"
+          title="Justify"
         >
           ☰
-        </ToolbarButton>
-        <ToolbarDivider />
-        <ToolbarButton 
-          onClick={() => execCommand('insertUnorderedList')} 
-          tooltip="Bullet List"
-        >
+        </button>
+        
+        <div className="divider divider-horizontal mx-1"></div>
+        
+        <button className="btn btn-sm btn-ghost" onClick={() => execCommand('insertUnorderedList')} title="Bullet List">
           • List
-        </ToolbarButton>
-        <ToolbarButton 
-          onClick={() => execCommand('insertOrderedList')} 
-          tooltip="Numbered List"
-        >
+        </button>
+        <button className="btn btn-sm btn-ghost" onClick={() => execCommand('insertOrderedList')} title="Numbered List">
           1. List
-        </ToolbarButton>
-      </Toolbar>
-    </div>
-  );
+        </button>
+      </div>
 
-  return (
-    <Layout header={header}>
-      <div className="p-4 flex justify-center overflow-auto min-h-full bg-gray-200">
+      {/* Editor */}
+      <div className="flex-1 bg-base-300 p-4 flex justify-center overflow-auto">
         <div
           ref={editorRef}
-          className="document-editor"
+          className="document-editor bg-base-100 shadow-xl"
           contentEditable
           onKeyUp={updateActiveFormats}
           onMouseUp={updateActiveFormats}
           suppressContentEditableWarning
         >
-          <h1 style={{ fontSize: '24px', marginBottom: '16px' }}>Welcome to Mini Word</h1>
+          <h1 style={{ fontSize: '24px', marginBottom: '16px' }}>Welcome to Word</h1>
           <p style={{ marginBottom: '12px' }}>
             This is a simple rich text editor. You can format text using the toolbar above.
           </p>
@@ -181,7 +181,7 @@ function App() {
           </p>
         </div>
       </div>
-    </Layout>
+    </div>
   );
 }
 
