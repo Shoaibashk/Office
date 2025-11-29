@@ -48,7 +48,7 @@ function App() {
             type="text"
             value={documentTitle}
             onChange={(e) => setDocumentTitle(e.target.value)}
-            className="input input-sm input-bordered bg-primary-focus text-primary-content border-primary-focus"
+            className="input input-sm input-bordered bg-primary/80 text-primary-content border-primary"
             placeholder="Document title"
           />
         </div>

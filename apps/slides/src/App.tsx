@@ -236,7 +236,7 @@ function App() {
             type="text"
             value={presentationName}
             onChange={(e) => setPresentationName(e.target.value)}
-            className="input input-sm input-bordered bg-warning text-warning-content border-warning"
+            className="input input-sm bg-warning/80 text-warning-content"
             placeholder="Presentation name"
           />
         </div>

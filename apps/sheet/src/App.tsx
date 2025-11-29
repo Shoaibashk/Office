@@ -279,7 +279,7 @@ function App() {
             type="text"
             value={sheetName}
             onChange={(e) => setSheetName(e.target.value)}
-            className="input input-sm input-bordered bg-success text-success-content border-success"
+            className="input input-sm bg-success/80 text-success-content"
             placeholder="Sheet name"
           />
         </div>
